@@ -17,6 +17,13 @@ Goals
 - Plugin support
 
 
+Coding Styleguide
+-----------------
+
+::
+
+    gofmt -tabs=False -tabwidth=4
+
 License
 -------
 

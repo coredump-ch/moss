@@ -48,3 +48,4 @@ if __name__ == '__main__':
             reply = rs.reply('localuser', message)
             response = process_reply(reply)
         print(json.dumps(response))
+        sys.stdout.flush()

@@ -2,23 +2,30 @@ package main
 
 import (
     "fmt"
+    "log"
     "strings"
 
     "github.com/thoj/go-ircevent"
+
+    "github.com/coredump-ch/moss/rivebot"
 )
 
 func main() {
     fmt.Println("Moss is starting...")
 
     const (
-        server  = "irc.freenode.net:6667"
+        server  = "irc.freenode.net:6697"
         channel = "#coredump"
         nick    = "mossbot"
         user    = "mossbot"
     )
 
     con := irc.IRC(nick, user)
-    //con.UseTLS = true
+    con.UseTLS = true
+
+    // Start rivebot
+    rbot := rivebot.NewRivebot()
+    rbot.Start()
 
     // Connect
     err := con.Connect(server)
@@ -37,6 +44,13 @@ func main() {
         if strings.Contains(e.Message, nick) {
             reply := fmt.Sprintf("Hi, %s!", e.Nick)
             con.Privmsg(channel, reply)
+        } else {
+            reply, err := rbot.Ask(e.Message)
+            if err != nil {
+                log.Printf("Error: %s", err)
+            } else {
+                con.Privmsg(channel, reply)
+            }
         }
     })
 

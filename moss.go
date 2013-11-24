@@ -8,12 +8,17 @@ import (
     "github.com/thoj/go-ircevent"
 
     "github.com/coredump-ch/moss/conf"
+    "github.com/coredump-ch/moss/plugin"
     "github.com/coredump-ch/moss/rivebot"
+
+    // Plugins
+    _ "github.com/coredump-ch/moss/plugins/status"
 )
 
 func main() {
     fmt.Println("Moss is starting...")
 
+    // Create connection
     con := irc.IRC(conf.Nick, conf.User)
     con.UseTLS = true
 
@@ -26,6 +31,11 @@ func main() {
     if err != nil {
         fmt.Println("Failed connecting.")
         return
+    }
+
+    // Register plugins
+    for _, initFunc := range plugin.Plugins {
+        initFunc(con)
     }
 
     // Join channel

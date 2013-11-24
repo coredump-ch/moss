@@ -41,11 +41,9 @@ func main() {
 
     // Reply to mentions
     con.AddCallback("PRIVMSG", func(e *irc.Event) {
-        if strings.Contains(e.Message, nick) {
-            reply := fmt.Sprintf("Hi, %s!", e.Nick)
-            con.Privmsg(channel, reply)
-        } else {
-            reply, err := rbot.Ask(e.Message)
+        if strings.HasPrefix(e.Message, nick) {
+            msg := strings.TrimSpace(strings.TrimPrefix(e.Message))
+            reply, err := rbot.Ask(msg)
             if err != nil {
                 log.Printf("Error: %s", err)
             } else {

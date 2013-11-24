@@ -8,7 +8,7 @@ Moss is an IRC bot written in Go. It is based on the `go-ircevent
 Features
 --------
 
-- Respond to mentions
+- Respond to mentions (chatterbot)
 
 
 Goals

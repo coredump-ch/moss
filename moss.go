@@ -7,20 +7,14 @@ import (
 
     "github.com/thoj/go-ircevent"
 
+    "github.com/coredump-ch/moss/conf"
     "github.com/coredump-ch/moss/rivebot"
 )
 
 func main() {
     fmt.Println("Moss is starting...")
 
-    const (
-        server  = "irc.freenode.net:6697"
-        channel = "#coredump"
-        nick    = "mossbot"
-        user    = "mossbot"
-    )
-
-    con := irc.IRC(nick, user)
+    con := irc.IRC(conf.Nick, conf.User)
     con.UseTLS = true
 
     // Start rivebot
@@ -28,7 +22,7 @@ func main() {
     rbot.Start()
 
     // Connect
-    err := con.Connect(server)
+    err := con.Connect(conf.Server)
     if err != nil {
         fmt.Println("Failed connecting.")
         return
@@ -36,13 +30,13 @@ func main() {
 
     // Join channel
     con.AddCallback("001", func(e *irc.Event) {
-        con.Join(channel)
+        con.Join(conf.Channel)
     })
 
     // Reply to mentions
     con.AddCallback("PRIVMSG", func(e *irc.Event) {
-        if strings.HasPrefix(e.Message, nick) {
-            msg := strings.TrimPrefix(e.Message, nick)
+        if strings.HasPrefix(e.Message, conf.Nick) {
+            msg := strings.TrimPrefix(e.Message, conf.Nick)
             msg = strings.TrimLeftFunc(msg, func(char rune) bool {
                 return char == ',' || char == ':' || char == '-' || char == ' '
             })
@@ -50,7 +44,7 @@ func main() {
             if err != nil {
                 log.Printf("Error: %s", err)
             } else {
-                con.Privmsg(channel, reply)
+                con.Privmsg(conf.Channel, reply)
             }
         }
     })

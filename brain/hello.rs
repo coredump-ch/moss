@@ -1,6 +1,6 @@
 ! version = 2.0
 
-+ (hi|hey|hello|g'day) *
++ (hi|hey|hello|g'day) [*]
 - Hello, human!
 - Hi there!
 - G'day!

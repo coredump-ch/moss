@@ -42,7 +42,10 @@ func main() {
     // Reply to mentions
     con.AddCallback("PRIVMSG", func(e *irc.Event) {
         if strings.HasPrefix(e.Message, nick) {
-            msg := strings.TrimSpace(strings.TrimPrefix(e.Message))
+            msg := strings.TrimPrefix(e.Message, nick)
+            msg = strings.TrimLeftFunc(msg, func(char rune) bool {
+                return char == ',' || char == ':' || char == '-' || char == ' '
+            })
             reply, err := rbot.Ask(msg)
             if err != nil {
                 log.Printf("Error: %s", err)

@@ -11,10 +11,11 @@ Features
 - Respond to mentions (chatterbot)
 
 
-Goals
------
+Plugins
+-------
 
-- Plugin support
+- Hackerspace opening status (`!status`)
+- BOFH excuses (`!excuse`)
 
 
 Coding Styleguide
@@ -23,6 +24,7 @@ Coding Styleguide
 ::
 
     gofmt -tabs=False -tabwidth=4
+
 
 License
 -------

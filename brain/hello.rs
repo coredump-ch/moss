@@ -9,7 +9,7 @@
 - How do you do. Please state your problem.
 - Hi. What seems to be your problem?
 
-+ goodbye
++ (bye|goodbye|cya|see ya)
 - Goodbye to you too.
 - Have a nice day.
 - See ya!

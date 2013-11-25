@@ -5,8 +5,10 @@ import (
     "log"
     "strings"
 
+    // 3rd party libraries
     "github.com/thoj/go-ircevent"
 
+    // Internal packages
     "github.com/coredump-ch/moss/conf"
     "github.com/coredump-ch/moss/plugin"
     "github.com/coredump-ch/moss/rivebot"
@@ -14,6 +16,15 @@ import (
     // Plugins
     _ "github.com/coredump-ch/moss/plugins/status"
 )
+
+// Clean a message, remove leading username
+func cleanMessage(rawMessage string) string {
+    msg := strings.TrimPrefix(rawMessage, conf.Nick)
+    msg = strings.TrimLeftFunc(msg, func(char rune) bool {
+        return char == ',' || char == ':' || char == '-' || char == ' '
+    })
+    return msg
+}
 
 func main() {
     fmt.Println("Moss is starting...")
@@ -34,9 +45,7 @@ func main() {
     }
 
     // Register plugins
-    for _, initFunc := range plugin.Plugins {
-        initFunc(con)
-    }
+    //plugin.Initialize(con)
 
     // Join channel
     con.AddCallback("001", func(e *irc.Event) {
@@ -46,15 +55,29 @@ func main() {
     // Reply to mentions
     con.AddCallback("PRIVMSG", func(e *irc.Event) {
         if strings.HasPrefix(e.Message, conf.Nick) {
-            msg := strings.TrimPrefix(e.Message, conf.Nick)
-            msg = strings.TrimLeftFunc(msg, func(char rune) bool {
-                return char == ',' || char == ':' || char == '-' || char == ' '
-            })
-            reply, err := rbot.Ask(msg)
-            if err != nil {
-                log.Printf("Error: %s", err)
+            msg := cleanMessage(e.Message)
+            // Commands start with a bang (!)
+            if strings.HasPrefix(msg, "!") {
+                parts := strings.SplitN(strings.TrimPrefix(msg, "!"), " ", 2)
+                var args, command string
+                command = parts[0]
+                if len(parts) > 1 {
+                    args = parts[1]
+                } else {
+                    args = ""
+                }
+                log.Printf("Invoking command: %s", command)
+                err := plugin.InvokeCommand(command, args, e, con)
+                if err != nil {
+                    log.Printf("*** %s", err)
+                }
             } else {
-                con.Privmsg(conf.Channel, reply)
+                reply, err := rbot.Ask(msg)
+                if err != nil {
+                    log.Printf("Error: %s", err)
+                } else {
+                    con.Privmsg(conf.Channel, reply)
+                }
             }
         }
     })

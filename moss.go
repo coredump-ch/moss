@@ -14,6 +14,7 @@ import (
     "github.com/coredump-ch/moss/rivebot"
 
     // Plugins
+    _ "github.com/coredump-ch/moss/plugins/excuse"
     _ "github.com/coredump-ch/moss/plugins/status"
 )
 

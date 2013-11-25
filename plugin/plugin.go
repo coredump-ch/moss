@@ -27,6 +27,7 @@ func RegisterCommand(command string, eventcode string, callback func(string, *ir
         log.Printf("*** Could not load command <%s>: already exists.", command)
     } else {
         commands[command] = callback
+        log.Printf("--- Registered command <%s>.", command)
     }
 }
 
@@ -46,7 +47,7 @@ func RegisterCommand(command string, eventcode string, callback func(string, *ir
 func InvokeCommand(command string, args string, e *irc.Event, con *irc.Connection) error {
     callback, exists := commands[command]
     if !exists {
-        return fmt.Errorf("Command %s not found.", command)
+        return fmt.Errorf("Command <%s> not found.", command)
     }
     return callback(args, e, con)
 }

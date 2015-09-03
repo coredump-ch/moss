@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"time"
 )
 
 // Structs
@@ -56,10 +57,30 @@ func NewRivebot() *Rivebot {
 // Methods
 
 func (r *Rivebot) Start() {
+	log.Print("Starting rivebot...")
+
+	// Start process
 	if err := r.cmd.Start(); err != nil {
 		log.Fatal(err)
 	}
-	log.Print("Started rivebot...")
+
+	// Create goroutine that waits for the process to finish
+	done := make(chan error, 1)
+	go func() {
+		done <- r.cmd.Wait()
+	}()
+
+	// Check whether the process has been started
+	select {
+	case err := <-done:
+		if err == nil {
+			log.Fatal("Rivebot process exited without an error.")
+		} else {
+			log.Fatalf("Rivebot process exited with error %v.", err)
+		}
+	case <-time.After(time.Second * 2):
+		log.Print("Started rivebot...")
+	}
 }
 
 func (r *Rivebot) Ask(message string) (string, error) {

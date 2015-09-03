@@ -3,5 +3,5 @@
 package conf
 
 const (
-    StatusAPI = "http://www.coredump.ch/status.py"
+	StatusAPI = "http://www.coredump.ch/status.py"
 )

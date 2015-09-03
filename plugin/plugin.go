@@ -4,9 +4,9 @@
 package plugin
 
 import (
-    "fmt"
-    "github.com/thoj/go-ircevent"
-    "log"
+	"fmt"
+	"github.com/thoj/go-ircevent"
+	"log"
 )
 
 // Plugin stores
@@ -23,12 +23,12 @@ var commands = make(map[string]func(string, *irc.Event, *irc.Connection) error)
 }*/
 
 func RegisterCommand(command string, eventcode string, callback func(string, *irc.Event, *irc.Connection) error) {
-    if _, exists := commands[command]; exists {
-        log.Printf("*** Could not load command <%s>: already exists.", command)
-    } else {
-        commands[command] = callback
-        log.Printf("--- Registered command <%s>.", command)
-    }
+	if _, exists := commands[command]; exists {
+		log.Printf("*** Could not load command <%s>: already exists.", command)
+	} else {
+		commands[command] = callback
+		log.Printf("--- Registered command <%s>.", command)
+	}
 }
 
 // Initialize all plugins
@@ -45,9 +45,9 @@ func RegisterCommand(command string, eventcode string, callback func(string, *ir
 // Invoke a command
 
 func InvokeCommand(command string, args string, e *irc.Event, con *irc.Connection) error {
-    callback, exists := commands[command]
-    if !exists {
-        return fmt.Errorf("Command <%s> not found.", command)
-    }
-    return callback(args, e, con)
+	callback, exists := commands[command]
+	if !exists {
+		return fmt.Errorf("Command <%s> not found.", command)
+	}
+	return callback(args, e, con)
 }

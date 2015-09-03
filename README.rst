@@ -18,14 +18,6 @@ Plugins
 - BOFH excuses (`!excuse`)
 
 
-Coding Styleguide
------------------
-
-::
-
-    gofmt -tabs=False -tabwidth=4
-
-
 License
 -------
 

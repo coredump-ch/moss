@@ -55,8 +55,8 @@ func main() {
 
 	// Reply to mentions
 	con.AddCallback("PRIVMSG", func(e *irc.Event) {
-		if strings.HasPrefix(e.Message, conf.Nick) {
-			msg := cleanMessage(e.Message)
+		if strings.HasPrefix(e.Message(), conf.Nick) {
+			msg := cleanMessage(e.Message())
 			// Commands start with a bang (!)
 			if strings.HasPrefix(msg, "!") {
 				parts := strings.SplitN(strings.TrimPrefix(msg, "!"), " ", 2)
